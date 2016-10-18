@@ -46,7 +46,7 @@ program pw1mts
 !cccccccccccccccccccccc
   XYMIN = -3.0
   XYMAX = 3.0
-  N = 50
+  N = 3
   H=(XYMAX-XYMIN)/(N-1)
   CL=20.
 
@@ -63,7 +63,7 @@ program pw1mts
   NNODES =  N*N 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccc
-! NUMBER OF NON ZEROS COEFFICIENTS IN THE MATRIX
+ ! NUMBER OF NON ZEROS COEFFICIENTS IN THE MATRIX
 !ccccccccccccccccccccccccccccccccccccccccccccccc
   NNE    =  N*(5*N-4)
 
@@ -73,16 +73,20 @@ program pw1mts
   ALLOCATE(AA(NNE),JA(NNE),IA(NNODES+1))
   AA=0.; JA=0 ; IA=0
   CALL FillMatrixDF(N,AA,JA,IA)
-
+  write(*,*) "Matrix filled"
   allocate(iwork(max(NNODES+1,2*NNE)))
+write(*,*) "Calling csort"
   call csort(NNODES,AA,JA,IA,iwork,.true.) 
+write(*,*) "Deallocating iwork"
   deallocate(iwork)
 
 !ccccccccccccccccccccccccccccccccccccccc
 ! RIGHT-HAND-SIDE ALLOCATION AND FILLING 
 !ccccccccccccccccccccccccccccccccccccccc
   allocate(RHS(NNODES))
+write(*,*) "Calling RHS filler"
   CALL FillRHSDF(N,X,Y,RHS)
+write(*,*) "Right hand side filled"
 
 !cccccccccccccccccccccccccccccc
 ! BOUNDARY CONDITIONS TREATMENT
